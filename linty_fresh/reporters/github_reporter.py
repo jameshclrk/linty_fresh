@@ -20,7 +20,7 @@ HUNK_REGEX = re.compile(r'@@ \-\d+,\d+ \+(\d+),\d+ @@')
 FILE_START_REGEX = re.compile(r'\+\+\+ b/(.*)')
 LINK_REGEX = re.compile(r'<(?P<url>.+)>; rel="(?P<rel>\w+)"')
 NEW_FILE_SECTION_START = 'diff --git a'
-MAX_LINT_ERROR_REPORTS = 10
+MAX_LINT_ERROR_REPORTS = 1000
 
 
 class HadLintErrorsException(Exception):
@@ -167,16 +167,16 @@ Only reporting the first {2}.""".format(
                     for problem in problems_for_line:
                         no_matching_line_messages.append('\t{0}'.format(
                             problem.message))
-                message = ('{0} says: I found some problems with lines not '
-                           'modified by this commit:\n```\n{1}\n```'.format(
-                               linter_name,
-                               '\n'.join(no_matching_line_messages)))
-                data = json.dumps({
-                    'body': message
-                })
-                review_comment_awaitable.append(
-                    asyncio.ensure_future(client_session.post(
-                        self._get_issue_url(), data=data)))
+                # message = ('{0} says: I found some problems with lines not '
+                #            'modified by this commit:\n```\n{1}\n```'.format(
+                #                linter_name,
+                #                '\n'.join(no_matching_line_messages)))
+                # data = json.dumps({
+                #     'body': message
+                # })
+                # review_comment_awaitable.append(
+                #     asyncio.ensure_future(client_session.post(
+                #         self._get_issue_url(), data=data)))
 
             responses = await asyncio.gather(
                 *review_comment_awaitable
